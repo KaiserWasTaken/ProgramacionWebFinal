@@ -97,10 +97,6 @@ Flyway carga estas cuentas en una base nueva:
 | Moderador | `moderator@bodriopopcorn.test` | `Demo123!` |
 | Usuario | `user01@bodriopopcorn.test` | `Demo123!` |
 
-Son credenciales públicas de demostración para desarrollo local. En producción,
-cambia las contraseñas o deshabilita estas cuentas; en bases existentes pueden
-haber sido modificadas.
-
 ## API y colección Bruno
 
 La API local usa `http://localhost:8089/api`. Para rutas protegidas, envía el
