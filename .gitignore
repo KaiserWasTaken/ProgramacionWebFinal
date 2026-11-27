@@ -26,9 +26,3 @@ dist/
 .DS_Store
 Thumbs.db
 graphify-out/
-database/
-
-# Documentación y pruebas excluidas de esta importación
-*.md
-!/README.md
-*.test.*

@@ -97,9 +97,6 @@ Flyway carga estas cuentas en una base nueva:
 | Moderador | `moderator@bodriopopcorn.test` | `Demo123!` |
 | Usuario | `user01@bodriopopcorn.test` | `Demo123!` |
 
-Son credenciales públicas de demostración para desarrollo local. En producción,
-cambia las contraseñas o deshabilita estas cuentas; en bases existentes pueden
-haber sido modificadas.
 
 ## API y colección Bruno
 
@@ -119,8 +116,21 @@ el token para las peticiones protegidas; también se prueban respuestas de error
 
 ## Base de datos
 
-Las migraciones están en `backend/src/main/resources/db/migration`. El siguiente
-diagrama muestra las tablas principales y sus relaciones:
+Las migraciones están en `backend/src/main/resources/db/migration`. El respaldo
+`database/backup.sql`, generado con `mysqldump`, contiene el esquema y datos de
+demostración, no los datos de la base personal.
+
+Para restaurarlo, crea primero una base vacía y, desde la raíz del proyecto,
+ejecuta lo siguiente con el cliente `mysql` disponible en el PATH:
+
+```powershell
+cmd.exe /c "mysql -u root -p bodriopopcorn < database\backup.sql"
+```
+
+El respaldo incluye el historial de Flyway. No lo importes en una base con datos
+que quieras conservar: el archivo reemplaza sus tablas.
+
+El siguiente diagrama muestra las tablas principales y sus relaciones:
 
 ```mermaid
 erDiagram
@@ -129,8 +139,8 @@ erDiagram
     TITLES ||--o{ REVIEWS : recibe
     TITLES ||--o{ TITLE_GENRES : tiene
     GENRES ||--o{ TITLE_GENRES : clasifica
-    TITLES ||--o{ TITLE_CREDITS : incluye
-    PEOPLE ||--o{ TITLE_CREDITS : participa
+    TITLES ||--o{ TITLE_CAST : incluye
+    PEOPLE ||--o{ TITLE_CAST : participa
     USERS ||--o{ WATCHLIST_ITEMS : guarda
     TITLES ||--o{ WATCHLIST_ITEMS : aparece
     USERS ||--o{ PASSWORD_RESET_TOKENS : solicita
@@ -165,7 +175,7 @@ erDiagram
         varchar name
         varchar role_type
     }
-    TITLE_CREDITS {
+    TITLE_CAST {
         bigint title_id PK, FK
         bigint person_id PK, FK
         varchar character_name
