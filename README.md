@@ -23,6 +23,8 @@ herramientas de administración.
 - Base de datos: MySQL 8, Spring Data JPA y Flyway.
 - Frontend: React, Vite, React Router y Axios.
 - Pruebas de API: Bruno.
+- Correo: Spring Mail, Postfix y relay SMTP de IONOS.
+- Mensajería: Twilio para SMS y Meta WhatsApp Cloud API.
 
 ## Requisitos
 
@@ -113,6 +115,29 @@ sudo ss -lnt
 Que el servicio esté habilitado indica que está configurado para iniciar con el
 sistema; para confirmar el arranque automático debe probarse un reinicio
 coordinado del VPS.
+
+## Correo y mensajería
+
+Spring Mail envía los correos de bienvenida y recuperación de contraseña a
+Postfix en el VPS. Postfix los entrega mediante un relay SMTP autenticado de
+IONOS. Las credenciales y los valores `MAIL_*` se configuran fuera del
+repositorio.
+
+- **SPF:** el registro DNS del dominio indica qué servidores están autorizados
+  para enviar correo en su nombre.
+- **DKIM:** una firma digital permite al destinatario verificar el dominio
+  firmante y que el contenido firmado no se alteró durante el envío.
+
+En un correo de prueba, Gmail mostró **SPF: PASS** y **DKIM: PASS** en
+«Mostrar original». Estos resultados corresponden a ese mensaje y no
+garantizan que todos los envíos lleguen a la bandeja de entrada.
+
+Twilio envía el aviso SMS después de restablecer la contraseña cuando el usuario
+tiene teléfono. En el modo de prueba configurado para la demo se usa la plantilla
+fija `sms_2fa` con un código ficticio, no el aviso personalizado; los
+destinatarios están sujetos a las restricciones de la cuenta de prueba.
+Las notificaciones de moderación por WhatsApp usan Meta WhatsApp Cloud API.
+Los tokens y credenciales de proveedores no se guardan en el repositorio.
 
 ## Cuentas de demostración
 
@@ -239,11 +264,25 @@ erDiagram
 
 ## Identidad visual
 
-El diseño emplea azul principal `#103582` para la marca y acciones, azul claro
-`#dcecff` para la navegación, y blanco `#ffffff` y gris claro `#f1f2f4` como
-superficies neutras. El rojo `#b42318` distingue errores. Los azules mantienen
-la identidad visual, mientras que los neutros favorecen la lectura y el rojo
-se reserva para alertas.
+La interfaz utiliza una paleta predominantemente **monocromática de azules**:
+variaciones del mismo tono establecen una identidad coherente y diferencian
+niveles de importancia sin introducir muchos colores competidores.
+
+| Color | Valor | Función |
+| --- | --- | --- |
+| Azul principal | `#103582` | Marca y acciones principales; aporta peso visual. |
+| Azul claro | `#dcecff` | Navegación; separa zonas con menor intensidad visual. |
+| Azul de enlace | `#0645d8` | Distingue enlaces y acciones interactivas. |
+| Blanco | `#ffffff` | Superficie neutra para tarjetas y formularios. |
+| Gris claro | `#f1f2f4` | Fondo neutro que separa las superficies blancas. |
+| Rojo | `#b42318` | Acento reservado para errores, diferenciado de los azules. |
+| Texto oscuro | `#141414` | Texto principal sobre fondos claros. |
+
+El contraste de luminosidad ayuda a la legibilidad y la jerarquía: blanco sobre
+azul principal alcanza aproximadamente **11.33:1** y texto oscuro sobre blanco
+**18.42:1**. Ambos pares superan la referencia WCAG AA de 4.5:1 para texto
+normal; esto no garantiza que todas las combinaciones de la interfaz cumplan.
+El rojo no debe ser la única señal de error: también se acompaña de texto.
 
 El teléfono del perfil es opcional; si se proporciona, debe incluir `+`, código
 de país y hasta 15 dígitos, sin espacios ni guiones. Esta validación no confirma
