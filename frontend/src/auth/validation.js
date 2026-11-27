@@ -1,6 +1,14 @@
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const REGISTRATION_PASSWORD_PATTERN = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,72}$/
 
+export function validateProfilePhone(phone) {
+  const normalizedPhone = phone.trim()
+  if (normalizedPhone && !/^\+[1-9][0-9]{1,14}$/.test(normalizedPhone)) {
+    return 'Ingresa un teléfono internacional con + y código de país, por ejemplo +525512345678.'
+  }
+  return ''
+}
+
 export function validateLogin({ email = '', password = '' } = {}) {
   const errors = {}
   const normalizedEmail = email.trim()

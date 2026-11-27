@@ -29,3 +29,6 @@ En `backend`, ejecuta `.\mvnw.cmd spring-boot:run`.
 En `frontend`, ejecuta `npm ci` y después `npm run dev`.
 
 El backend usa el puerto 8089; Vite muestra la dirección del frontend.
+
+El teléfono del perfil es opcional; si se proporciona, debe incluir `+`,
+código de país y hasta 15 dígitos, sin espacios ni guiones.

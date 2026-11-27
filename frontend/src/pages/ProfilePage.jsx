@@ -2,6 +2,7 @@ import { useState } from 'react'
 import apiClient from '../api/client.js'
 import useApiResource from '../api/useApiResource.js'
 import { validateAvatar } from '../auth/avatar.js'
+import { validateProfilePhone } from '../auth/validation.js'
 import GoogleButton from '../auth/GoogleButton.jsx'
 
 export default function ProfilePage() {
@@ -54,9 +55,14 @@ export default function ProfilePage() {
 
   async function saveProfile(event) {
     event.preventDefault()
-    setSaving(true)
     setError('')
     setNotice('')
+    const phoneError = validateProfilePhone(values.phone)
+    if (phoneError) {
+      setError(phoneError)
+      return
+    }
+    setSaving(true)
     try {
       const { data } = await apiClient.put('/api/users/me', {
         fullName: values.fullName.trim(),
@@ -70,7 +76,7 @@ export default function ProfilePage() {
       })
       setNotice('Tu perfil se actualizó correctamente.')
     } catch (requestError) {
-      setError(requestError.response?.data?.message || 'No se pudo guardar tu perfil.')
+      setError(requestError.response?.data?.fieldErrors?.phone || requestError.response?.data?.message || 'No se pudo guardar tu perfil.')
     } finally {
       setSaving(false)
     }
@@ -100,12 +106,16 @@ export default function ProfilePage() {
           />
         </label>
         <label>
-          Teléfono
+          Teléfono (opcional)
           <input
+            aria-describedby="phone-format"
             maxLength={30}
             onChange={(event) => setEditedValues((current) => ({ ...(current || values), phone: event.target.value }))}
+            placeholder="+525512345678"
+            type="tel"
             value={values.phone}
           />
+          <small id="phone-format">Incluye + y el código de país, sin espacios ni guiones.</small>
         </label>
         <button className="primary-button" disabled={saving} type="submit">
           {saving ? 'Guardando...' : 'Guardar cambios'}
