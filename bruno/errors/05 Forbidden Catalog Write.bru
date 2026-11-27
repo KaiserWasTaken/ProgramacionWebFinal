@@ -1,0 +1,34 @@
+meta {
+  name: Forbidden Catalog Write
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/titles
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "type": "MOVIE",
+    "name": "Bruno permission check",
+    "synopsis": "A valid payload used to test the role restriction.",
+    "releaseYear": 2025,
+    "durationMinutes": 90,
+    "genreIds": [1],
+    "credits": []
+  }
+}
+
+tests {
+  test("regular user cannot create a title", function () {
+    expect(res.getStatus()).to.equal(403);
+    expect(res.getBody().status).to.equal(403);
+  });
+}

@@ -1,0 +1,30 @@
+meta {
+  name: Invalid Review Rating
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/reviews
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "titleId": 1,
+    "rating": 6,
+    "comment": "This request must fail validation."
+  }
+}
+
+tests {
+  test("review rating outside 1-5 returns a field error", function () {
+    expect(res.getStatus()).to.equal(400);
+    expect(res.getBody().fieldErrors).to.have.property("rating");
+  });
+}

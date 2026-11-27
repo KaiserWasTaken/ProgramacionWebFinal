@@ -1,0 +1,21 @@
+meta {
+  name: Missing Title
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/titles/99999999
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+tests {
+  test("unknown title returns not found", function () {
+    expect(res.getStatus()).to.equal(404);
+    expect(res.getBody().status).to.equal(404);
+  });
+}

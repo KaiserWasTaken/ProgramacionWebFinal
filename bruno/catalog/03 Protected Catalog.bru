@@ -1,0 +1,24 @@
+meta {
+  name: Protected Catalog
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/titles?page=0&size=2&search=Lantern
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+tests {
+  test("authenticated user can search the paginated catalog", function () {
+    const body = res.getBody();
+    expect(res.getStatus()).to.equal(200);
+    expect(body.content).to.be.an("array");
+    expect(body.content[0].name).to.equal("The Last Lantern");
+    expect(body.size).to.equal(2);
+  });
+}
