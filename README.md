@@ -87,6 +87,33 @@ propias configuraciones y credenciales. Para Google, configura el mismo ID de
 cliente web en `GOOGLE_CLIENT_ID` para el backend y `VITE_GOOGLE_CLIENT_ID`
 para el frontend. Consulta la plantilla de configuración del backend.
 
+## Despliegue
+
+Las plantillas de `deployment/systemd/` y `deployment/nginx/` documentan el
+servicio Java y el proxy del VPS. El JAR se ejecuta en `127.0.0.1:8089`,
+Nginx sirve el frontend y redirige HTTP a HTTPS. MySQL debe permanecer accesible
+solo localmente. El servicio carga su configuración privada desde
+`/etc/bodriopopcorn/backend.env`; ese archivo y los certificados privados no
+deben subirse al repositorio.
+
+Para otro servidor, adapta las rutas y sustituye `__DOMAIN__` en la plantilla
+Nginx. El certificado debe existir antes de habilitar la configuración HTTPS.
+Revisa el JAR antes de desplegarlo: una compilación local puede incluir
+`application.properties` con credenciales.
+
+En el VPS, los siguientes comandos comprueban el servicio y la configuración:
+
+```sh
+systemctl is-active bodriopopcorn
+systemctl is-enabled bodriopopcorn
+sudo nginx -t
+sudo ss -lnt
+```
+
+Que el servicio esté habilitado indica que está configurado para iniciar con el
+sistema; para confirmar el arranque automático debe probarse un reinicio
+coordinado del VPS.
+
 ## Cuentas de demostración
 
 Flyway carga estas cuentas en una base nueva:
